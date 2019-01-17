@@ -110,6 +110,17 @@ def decode(obj, chain=None):
                             dtype=np.dtype(descr))[0]
         elif b'complex' in obj:
             return complex(tostr(obj[b'data']))
+        elif 'nd' in obj:
+            if obj['nd'] is True:
+                descr = obj['type']
+                return np.frombuffer(obj['data'].encode(),
+                            dtype=np.dtype(descr)).reshape(obj['shape'])
+            else:
+                descr = obj['type']
+                return np.frombuffer(obj['data'].encode(),
+                            dtype=np.dtype(descr))[0]
+        elif 'complex' in obj:
+            return complex(tostr(obj['data']))
         else:
             return obj if chain is None else chain(obj)
     except KeyError:
